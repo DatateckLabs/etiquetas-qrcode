@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Visualizador de TAG</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+    .tag-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); max-width: 600px; margin: auto; }
+    h2 { color: #333; }
+    pre { background: #eee; padding: 10px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="tag-box">
+    <h2>Dados da TAG</h2>
+    <pre id="dados">Carregando...</pre>
+  </div>
+
+  <script>
+    // Pegar TAG da URL (?tag=PC-01)
+    const params = new URLSearchParams(window.location.search);
+    const tag = params.get("tag");
+
+    if (!tag) {
+      document.getElementById("dados").innerText = "❌ Nenhuma TAG fornecida.";
+    } else {
+      // URL do seu Apps Script que retorna os dados
+      const urlScript = "https://script.google.com/macros/s/AKfycbxucK72DMmMOTL0xmHPGkYXyFK-CitnXnVwO3FAwSCfoc2uLK3A5yHLcNu1voklTh9dzw/exec?tag=";
+
+      fetch(urlScript + encodeURIComponent(tag))
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("dados").innerText = data;
+        })
+        .catch(err => {
+          document.getElementById("dados").innerText = "❌ Erro ao carregar dados.";
+          console.error(err);
+        });
+    }
+  </script>
+</body>
+</html>
